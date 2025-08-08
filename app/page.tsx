@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import logo from '../public/zekindo-logo.png';
+import ScalingIndicesCalculator from './components/ScalingIndicesCalculator';
+import ROCalculator from './components/ROCalculator';
 import OperatingData from './components/OperatingData';
 import DataManager from './components/DataManager';
 

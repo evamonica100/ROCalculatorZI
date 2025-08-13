@@ -85,9 +85,8 @@ export default function Home() {
         <DataManager />
         {activeSection === 'operating' && <OperatingData />}
         
-        {activeSection === 'project' && <ProjectDetails />}
-        {activeSection === 'water' && <FeedWaterAnalysis />}
-        {activeSection === 'membrane' && <ROMembraneDesign />}
+        {activeSection === 'project' && <ScalingIndicesCalculator />}
+        {activeSection === 'water' && <ROCalculator />}
 
       </main>
       

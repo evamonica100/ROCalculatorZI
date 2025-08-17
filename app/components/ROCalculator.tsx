@@ -182,7 +182,7 @@ waterAnalysis: {
   maxOperatingTemp: 60,         // °C
   heatDisinfectionTemp: 85,     // °C
   maxPressure: 600              // psi
-}
+},
     // ZEKINDO Sea Water (SW) membranes
 'ZEKINDO SW-4040': {
   area: 82,

@@ -157,7 +157,32 @@ waterAnalysis: {
       maxFeedFlowRate: 16, // gpm
       maxPressureDrop: 15 // psi
     },
-    
+
+    // Heat Disinfection RO Membranes
+'HSRO-8040T95/31SU': {
+  area: 390,                    // ft²
+  waterPermeability: 0.166260,  // gfd/psi
+  saltPermeability: 0.004679,   // gfd
+  rejectionNominal: 0.995,      // 99.5%
+  maxFlux: 30,                  // gfd (higher for low-pressure operation)
+  maxFeedFlowRate: 20,          // gpm
+  maxPressureDrop: 15,          // psi
+  maxOperatingTemp: 60,         // °C
+  heatDisinfectionTemp: 85,     // °C
+  maxPressure: 600              // psi
+},
+'HSRO-4040T95/31SU': {
+  area: 91,                     // ft²
+  waterPermeability: 0.150426,  // gfd/psi
+  saltPermeability: 0.004233,   // gfd
+  rejectionNominal: 0.995,      // 99.5%
+  maxFlux: 30,                  // gfd
+  maxFeedFlowRate: 12,          // gpm
+  maxPressureDrop: 15,          // psi
+  maxOperatingTemp: 60,         // °C
+  heatDisinfectionTemp: 85,     // °C
+  maxPressure: 600              // psi
+}
     // ZEKINDO Sea Water (SW) membranes
 'ZEKINDO SW-4040': {
   area: 82,

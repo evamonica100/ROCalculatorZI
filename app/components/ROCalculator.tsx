@@ -197,8 +197,8 @@ waterAnalysis: {
 },
 'ZEKINDO SW-400 HRLE': {
   area: 400,
-  waterPermeability: 0.0246,  // FIXED: Calculated from specs
-  saltPermeability: 0.0563,   // FIXED: Calculated from specs
+  waterPermeability: 0.031043,  // FIXED: Calculated from specs
+  saltPermeability: 0.006209,   // FIXED: Calculated from specs
   rejectionNominal: 0.997,
   maxFlux: 16,
   maxFeedFlowRate: 16,

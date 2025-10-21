@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -227,7 +229,89 @@ const OperatingData = () => {
     if (logs.length === 0) {
       alert("No data to export");
       return;
+      // Generate the PDF report
+     generatePDFReport();
     }
+
+  const generatePDFReport = async () => {
+     const doc = new jsPDF();
+
+     // Add title and headers
+     doc.text('RO Membrane Performance Report', 14, 20);
+
+     // Render and add performance trend plots
+     const chartCanvas = new ChartJSNodeCanvas({ width: 600, height: 400 });
+     
+     const chartConfig = {
+       type: 'line',
+       data: {
+         labels: logs.map((log) => log.date),
+         datasets: [
+           {
+             label: 'Normalized Permeate Flow (m³/h)',
+             data: logs.map((log) => log.NQp),
+             borderColor: 'rgb(75, 192, 192)',
+             backgroundColor: 'rgba(75, 192, 192, 0.2)',
+             tension: 0.1,
+           },
+           {
+             label: 'Normalized Salt Rejection (%)',
+             data: logs.map((log) => log.NSR * 100),
+             borderColor: 'rgb(153, 102, 255)',
+             backgroundColor: 'rgba(153, 102, 255, 0.2)',
+             tension: 0.1,
+           },
+           {
+             label: 'Differential Pressure (bar)',
+             data: logs.map((log) => log.dP),
+             borderColor: 'rgb(255, 99, 132)',
+             backgroundColor: 'rgba(255, 99, 132, 0.2)',
+             tension: 0.1,
+           },
+         ],
+       },
+       options: {
+         responsive: true,
+         scales: {
+           x: {
+             display: true,
+             title: {
+               display: true,
+               text: 'Date',
+             },
+           },
+           y: {
+             display: true,
+             title: {
+               display: true,
+               text: 'Value',
+             },
+           },
+         },
+       },
+     };
+     
+     const chartImage = await chartCanvas.renderToDataURL(chartConfig);
+     doc.addImage(chartImage, 'PNG', 10, 40, 180, 120);
+
+     // Add cleaning assessment results
+     doc.text('Cleaning Assessment Results', 14, 180);
+     const latest = logs[logs.length - 1];
+     const baselineValues = useReferenceForNormalization
+       ? calculateResults(referenceConditions as LogEntry)
+       : logs[0];
+
+     const flowDecline = ((latest.NQp - baselineValues.NQp) / baselineValues.NQp) * 100;
+     const saltRejectionChange = ((latest.NSR - baselineValues.NSR) / baselineValues.NSR) * 100;
+     const pressureDropIncrease = ((latest.NdP - baselineValues.NdP) / baselineValues.NdP) * 100;
+
+     doc.text(`Normalized Flow Decline: ${flowDecline.toFixed(2)}%`, 14, 190);
+     doc.text(`Salt Rejection Change: ${saltRejectionChange.toFixed(2)}%`, 14, 200);
+     doc.text(`Pressure Drop Increase: ${pressureDropIncrease.toFixed(2)}%`, 14, 210);
+
+     // Save the PDF
+     doc.save('RO_Performance_Report.pdf');
+   };
     
     const wb = XLSX.utils.book_new();
     

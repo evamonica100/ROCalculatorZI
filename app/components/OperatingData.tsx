@@ -3,8 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Line } from "react-chartjs-2";
 import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,6 +13,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { Document, Paragraph, TextRun, HeadingLevel, ImageRun, Table, TableRow, TableCell, WidthType, AlignmentType } from 'docx';
 
 ChartJS.register(
   CategoryScale,
@@ -229,73 +228,106 @@ const OperatingData = () => {
     if (logs.length === 0) {
       alert("No data to export");
       return;
-      // Generate the PDF report
-     generatePDFReport();
+  generateWordReport();
     }
+  const generateWordReport = async () => {
+     const doc = new Document();
 
-  const generatePDFReport = async () => {
-     const doc = new jsPDF();
+     // Add title
+     doc.addSection({
+       children: [
+         new Paragraph({
+           text: 'RO Membrane Performance Report',
+           heading: HeadingLevel.TITLE,
+           alignment: AlignmentType.CENTER,
+         }),
+       ],
+     });
 
-     // Add title and headers
-     doc.text('RO Membrane Performance Report', 14, 20);
+     // Add performance trend plots
+     const chartCanvas = document.createElement('canvas');
+     chartCanvas.width = 600;
+     chartCanvas.height = 400;
+     const ctx = chartCanvas.getContext('2d');
 
-     // Render and add performance trend plots
-     const chartCanvas = new ChartJSNodeCanvas({ width: 600, height: 400 });
-     
-     const chartConfig = {
-       type: 'line',
-       data: {
-         labels: logs.map((log) => log.date),
-         datasets: [
-           {
-             label: 'Normalized Permeate Flow (m³/h)',
-             data: logs.map((log) => log.NQp),
-             borderColor: 'rgb(75, 192, 192)',
-             backgroundColor: 'rgba(75, 192, 192, 0.2)',
-             tension: 0.1,
-           },
-           {
-             label: 'Normalized Salt Rejection (%)',
-             data: logs.map((log) => log.NSR * 100),
-             borderColor: 'rgb(153, 102, 255)',
-             backgroundColor: 'rgba(153, 102, 255, 0.2)',
-             tension: 0.1,
-           },
-           {
-             label: 'Differential Pressure (bar)',
-             data: logs.map((log) => log.dP),
-             borderColor: 'rgb(255, 99, 132)',
-             backgroundColor: 'rgba(255, 99, 132, 0.2)',
-             tension: 0.1,
-           },
-         ],
-       },
-       options: {
-         responsive: true,
-         scales: {
-           x: {
-             display: true,
-             title: {
-               display: true,
-               text: 'Date',
+     if (ctx) {
+       const chart = new Chart(ctx, {
+         type: 'line',
+         data: {
+           labels: logs.map((log) => log.date),
+           datasets: [
+             {
+               label: 'Normalized Permeate Flow (m³/h)',
+               data: logs.map((log) => log.NQp),
+               borderColor: 'rgb(75, 192, 192)',
+               backgroundColor: 'rgba(75, 192, 192, 0.2)',
+               tension: 0.1,
              },
-           },
-           y: {
-             display: true,
-             title: {
+             {
+               label: 'Normalized Salt Rejection (%)',
+               data: logs.map((log) => log.NSR * 100),
+               borderColor: 'rgb(153, 102, 255)',
+               backgroundColor: 'rgba(153, 102, 255, 0.2)',
+               tension: 0.1,
+             },
+             {
+               label: 'Differential Pressure (bar)',
+               data: logs.map((log) => log.dP),
+               borderColor: 'rgb(255, 99, 132)',
+               backgroundColor: 'rgba(255, 99, 132, 0.2)',
+               tension: 0.1,
+             },
+           ],
+         },
+         options: {
+           responsive: true,
+           scales: {
+             x: {
                display: true,
-               text: 'Value',
+               title: {
+                 display: true,
+                 text: 'Date',
+               },
+             },
+             y: {
+               display: true,
+               title: {
+                 display: true,
+                 text: 'Value',
+               },
              },
            },
          },
-       },
-     };
-     
-     const chartImage = await chartCanvas.renderToDataURL(chartConfig);
-     doc.addImage(chartImage, 'PNG', 10, 40, 180, 120);
+       });
+
+       const chartImage = chartCanvas.toDataURL();
+       const imageData = atob(chartImage.split(',')[1]);
+       const imageBuffer = new ArrayBuffer(imageData.length);
+       const imageView = new Uint8Array(imageBuffer);
+       for (let i = 0; i < imageData.length; i++) {
+         imageView[i] = imageData.charCodeAt(i);
+       }
+
+       doc.addSection({
+         children: [
+           new Paragraph({}),
+           new Paragraph({
+             children: [
+               new ImageRun({
+                 data: imageBuffer,
+                 transformation: {
+                   width: 600,
+                   height: 400,
+                 },
+               }),
+             ],
+             alignment: AlignmentType.CENTER,
+           }),
+         ],
+       });
+     }
 
      // Add cleaning assessment results
-     doc.text('Cleaning Assessment Results', 14, 180);
      const latest = logs[logs.length - 1];
      const baselineValues = useReferenceForNormalization
        ? calculateResults(referenceConditions as LogEntry)
@@ -305,14 +337,77 @@ const OperatingData = () => {
      const saltRejectionChange = ((latest.NSR - baselineValues.NSR) / baselineValues.NSR) * 100;
      const pressureDropIncrease = ((latest.NdP - baselineValues.NdP) / baselineValues.NdP) * 100;
 
-     doc.text(`Normalized Flow Decline: ${flowDecline.toFixed(2)}%`, 14, 190);
-     doc.text(`Salt Rejection Change: ${saltRejectionChange.toFixed(2)}%`, 14, 200);
-     doc.text(`Pressure Drop Increase: ${pressureDropIncrease.toFixed(2)}%`, 14, 210);
+     doc.addSection({
+       children: [
+         new Paragraph({}),
+         new Paragraph({
+           text: 'Cleaning Assessment Results',
+           heading: HeadingLevel.HEADING_1,
+         }),
+         new Table({
+           rows: [
+             new TableRow({
+               children: [
+                 new TableCell({
+                   width: {
+                     size: 50,
+                     type: WidthType.PERCENTAGE,
+                   },
+                   children: [new Paragraph('Parameter')],
+                 }),
+                 new TableCell({
+                   width: {
+                     size: 50,
+                     type: WidthType.PERCENTAGE,
+                   },
+                   children: [new Paragraph('Value')],
+                 }),
+               ],
+             }),
+             new TableRow({
+               children: [
+                 new TableCell({
+                   children: [new Paragraph('Normalized Flow Decline')],
+                 }),
+                 new TableCell({
+                   children: [new Paragraph(`${flowDecline.toFixed(2)}%`)],
+                 }),
+               ],
+             }),
+             new TableRow({
+               children: [
+                 new TableCell({
+                   children: [new Paragraph('Salt Rejection Change')],
+                 }),
+                 new TableCell({
+                   children: [new Paragraph(`${saltRejectionChange.toFixed(2)}%`)],
+                 }),
+               ],
+             }),
+             new TableRow({
+               children: [
+                 new TableCell({
+                   children: [new Paragraph('Pressure Drop Increase')],
+                 }),
+                 new TableCell({
+                   children: [new Paragraph(`${pressureDropIncrease.toFixed(2)}%`)],
+                 }),
+               ],
+             }),
+           ],
+         }),
+       ],
+     });
 
-     // Save the PDF
-     doc.save('RO_Performance_Report.pdf');
+     // Save the Word document
+     const blob = await Packer.toBlob(doc);
+     const url = URL.createObjectURL(blob);
+     const link = document.createElement('a');
+     link.href = url;
+     link.download = 'RO_Performance_Report.docx';
+     link.click();
+     URL.revokeObjectURL(url);
    };
-    
     const wb = XLSX.utils.book_new();
     
     const exportData = logs.map(log => ({

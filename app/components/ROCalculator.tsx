@@ -150,7 +150,7 @@ waterAnalysis: {
     },
     'ZEKINDO BW-400 FR': {
       area: 400, // ft²
-      waterPermeability: 0.145, // gfd/psi
+      waterPermeability: 0.129, // gfd/psi
       saltPermeability: 0.00006, // gfd
       rejectionNominal: 0.997, // fraction
       maxFlux: 24, // gfd

@@ -633,10 +633,7 @@ waterAnalysis: {
       const selectedMembraneProp = membraneProperties[elementType] || membraneProperties['ZEKINDO SW-400 HR'];
       
       const tcf = calculateTCF(inputs.temperature);
-const initialFeedOsmoticPressure = calculateOsmoticPressure(
-  inputs.waterAnalysis,
-  inputs.temperature
-);
+const initialFeedOsmoticPressure =  0.012 * inputs.feedTDS * (273 + inputs.temperature) / 298;
       const foulingFactor = inputs.foulingFactor;
       const flowFactor = inputs.flowFactor;
       

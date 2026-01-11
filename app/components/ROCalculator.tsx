@@ -245,7 +245,7 @@ waterAnalysis: {
     limitingRecovery: { label: "Limiting Recovery", unit: "%" },
     averageFlux: { label: "Average Flux", unit: "GFD" },
     totalPermeateFlow: { label: "Total Permeate Flow", unit: "m³/h" },
-    permeateConcentration: { label: "Permeate Conductivity", unit: "µS/cm" },
+    permeateConcentration: { label: "Permeate TDS", unit: "ppm" },
     averageElementRecovery: { label: "Average Element Recovery", unit: "%" },
     concentratePolarization: { label: "Concentration Polarization", unit: "" },
     concentrateOsmoticPressure: {
@@ -1036,7 +1036,7 @@ averageElementRecovery: calculateAverageElementRecovery(actualRecovery, totalEle
                   tension: 0.1,
                 },
                 {
-                  label: "Permeate Conductivity (µS/cm)",
+                  label: "Permeate TDS (ppm)",
                   data: formattedElementResults.map((el) => el.permeateTDS),
                   borderColor: "rgb(255, 99, 132)",
                   tension: 0.1,
@@ -1620,9 +1620,9 @@ averageElementRecovery: calculateAverageElementRecovery(actualRecovery, totalEle
               </span>
             </div>
             <div className="p-3 bg-white rounded-md flex justify-between items-center">
-              <span className="font-medium text-gray-700">Permeate Conductivity</span>
+              <span className="font-medium text-gray-700">Permeate TDS</span>
               <span className="text-gray-900">
-                {results.systemResults.permeateConcentration.toFixed(1)} <span className="text-gray-500 ml-1">µS/cm</span>
+                {results.systemResults.permeateConcentration.toFixed(1)} <span className="text-gray-500 ml-1">ppm</span>
               </span>
             </div>
             <div className="p-3 bg-white rounded-md flex justify-between items-center">
@@ -1713,7 +1713,7 @@ averageElementRecovery: calculateAverageElementRecovery(actualRecovery, totalEle
                     "Recovery (%)",
                     "Flux (LMH)",
                     "Permeate Flow (m³/h)",
-                    "Permeate Conductivity (µS/cm)",
+                    "Permeate TDS (ppm)",
                     "NDP (psi)",
                   ].map((header) => (
                     <th

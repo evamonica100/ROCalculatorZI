@@ -927,7 +927,7 @@ const permeateTDS = calculatePermeateTDS(
           bestResults = {
             feedFlow: inputs.feedFlow,
             feedTDS: inputs.feedTDS,
-            feedPressure,
+            feedPressure: feedPressure - 72,
             permeateFlow: totalPermeateFlow,
             permeateTDS: avgPermeateTDS,
             recovery: actualRecovery * 100,
@@ -948,58 +948,44 @@ averageElementRecovery: calculateAverageElementRecovery(actualRecovery, totalEle
             feedOsmoticPressure: initialFeedOsmoticPressure
           };
         }
-        let lowP = initialFeedOsmoticPressure + 200;
-let highP = initialFeedOsmoticPressure + 900;
+        
         // Check for convergence
-const toleranceInPercentagePoints = inputs.convergenceTolerance;
-
-if (
-  recoveryDifference * 100 < toleranceInPercentagePoints &&
-  iterations >= minIterations
-) {
-  converged = true;
-  setConvergenceStatus(
-    `Converged in ${iterations} iterations (difference: ${(recoveryDifference * 100).toFixed(2)}%)`
-  );
-} else {
-
-  // TRUE binary search adjustment
-  if (actualRecovery < targetRecovery) {
-    // Pressure too low
-    lowP = feedPressure;
-  } else {
-    // Pressure too high
-    highP = feedPressure;
-  }
-
-  // Update pressure from bounds
-  feedPressure = 0.5 * (lowP + highP);
-
-  // Soft safety clamp (does NOT lock solver)
-  feedPressure = Math.max(
-    initialFeedOsmoticPressure + 100,
-    feedPressure
-  );
-  feedPressure = Math.min(
-    initialFeedOsmoticPressure + 900,
-    feedPressure
-  );
-
-  setConvergenceStatus(
-    `Iteration ${iterations}: ` +
-    `Recovery=${(actualRecovery * 100).toFixed(2)}% ` +
-    `Target=${inputs.recoveryTarget}% ` +
-    `Pressure=${feedPressure.toFixed(1)} psi`
-  );
-}
-
-// Safety valve
-if (iterations >= inputs.iterationLimit && !converged) {
-  setConvergenceStatus(
-    `Did not converge after ${iterations} iterations. ` +
-    `Best difference: ${(bestDifference * 100).toFixed(2)}%`
-  );
-}
+        const toleranceInPercentagePoints = inputs.convergenceTolerance;
+        if (recoveryDifference * 100 < toleranceInPercentagePoints && iterations >= minIterations) {
+          converged = true;
+          setConvergenceStatus(`Converged in ${iterations} iterations (difference: ${(recoveryDifference*100).toFixed(2)}%)`);
+        } else {
+          // Binary search adjustment
+          if (actualRecovery < targetRecovery) {
+            // Need to increase pressure
+            feedPressure += pressureIncrement;
+          } else {
+            // Need to decrease pressure
+            feedPressure -= pressureIncrement;
+          }
+          
+          // Reduce the increment for next iteration
+          pressureIncrement /= 1.2;
+          
+          // Ensure pressure increment doesn't get too small too quickly
+          if (iterations < 10) {
+            pressureIncrement = Math.max(pressureIncrement, 5); // Keep at least 5 psi steps early on
+          }
+          
+          // Sanity check on pressure
+          feedPressure = Math.max(initialFeedOsmoticPressure * 1.1, feedPressure);
+          feedPressure = Math.min(1500, feedPressure); // Cap at 1500 psi
+          
+          setConvergenceStatus(`Iteration ${iterations}: Recovery=${(actualRecovery*100).toFixed(2)}% vs Target=${inputs.recoveryTarget}%, Pressure=${feedPressure.toFixed(1)} psi`);
+        }
+        
+        // Safety valve
+        if (iterations >= inputs.iterationLimit && !converged) {
+          setConvergenceStatus(`Did not converge after ${iterations} iterations. Best difference: ${(bestDifference*100).toFixed(2)}%`);
+        }
+      }
+      
+      setIterationCount(iterations);
       
       // Update charts if the canvas elements exist
       const ctxConc = document.getElementById(

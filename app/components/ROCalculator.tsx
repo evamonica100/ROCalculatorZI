@@ -827,7 +827,7 @@ const feedOsmoticPressure = initialFeedOsmoticPressure * concentrationRatio;
 // --------------------------------------------
 const maxElementRecovery = elementType.includes('SW') ? 0.12 : 0.15;
 const elementRecovery =
-  Math.min(maxElementRecovery, 0.5 * stageRecovery / elementsInStage);
+  Math.min(maxElementRecovery, 0.5 * targetRecovery / elementsInStage);
 element.recovery = elementRecovery;
 
 // --------------------------------------------

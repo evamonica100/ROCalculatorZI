@@ -368,6 +368,7 @@ const Cp =
   (B / (A * ndpEffective + B)) * effectiveFeedTDS;
 
 return Cp;
+  };
 
   // Calculate limiting system recovery using formula: YL = 1 - (πf × pf × R) / (Pf - ΔPfc - Pp)
 const calculateLimitingRecovery = (

@@ -816,7 +816,13 @@ const feedOsmoticPressure = initialFeedOsmoticPressure * concentrationRatio;
 const permeateOsmoticPressure = calculatePermeateOsmoticPressure(feedOsmoticPressure, selectedMembraneProp.rejectionNominal);
 
 // NDP = Feed Pressure - Feed Osmotic Pressure - Permeate Pressure - Permeate Osmotic Pressure
-const ndp = Math.max(0, pvFeedPressure - effectiveOsmoticPressure - permatePressure - permeateOsmoticPressure);
+const deltaPi =
+  effectiveOsmoticPressure - permeateOsmoticPressure;
+
+const ndp = Math.max(
+  0,
+  pvFeedPressure - permatePressure - deltaPi
+);
               element.ndp = ndp;
               
               // Calculate water flux through membrane

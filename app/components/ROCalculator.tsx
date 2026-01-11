@@ -887,7 +887,10 @@ const finalElementRecovery =
     maxElementRecovery,
     permeateFlowM3h / Math.max(1e-6, pvFeedFlow)
   );
-element.recovery = finalElementRecovery;
+const relaxation = 0.3; // DuPont-like
+element.recovery =
+  relaxation * finalElementRecovery +
+  (1 - relaxation) * element.recovery;
 
 // --------------------------------------------
 // 6. CONCENTRATE FLOW & TDS

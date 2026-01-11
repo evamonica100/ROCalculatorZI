@@ -356,11 +356,18 @@ const calculatePermeateTDS = (feedTDS, elementRejection, flux, saltPermeability,
   
   // Fallback method using feed TDS
   const effectiveFeedTDS = feedTDS * (polarizationFactor || 1.0);
-  const permeateTDS = effectiveFeedTDS * (1 - elementRejection);
-  
-  // Apply safety limits
-  return Math.max(10, Math.min(permeateTDS, feedTDS * 0.8));
-};
+// --- ADD THIS INSIDE calculatePermeateTDS ---
+const A = 1; // normalized (already embedded in flux)
+const B = saltPermeability;
+
+// Convert flux from gfd to m/s equivalent not required (ratio-based)
+const ndpEffective = Math.max(1e-6, flux);
+
+// Salt passage model (DuPont-style)
+const Cp =
+  (B / (A * ndpEffective + B)) * effectiveFeedTDS;
+
+return Cp;
 
   // Calculate limiting system recovery using formula: YL = 1 - (πf × pf × R) / (Pf - ΔPfc - Pp)
 const calculateLimitingRecovery = (
@@ -817,9 +824,19 @@ const feedOsmoticPressure = initialFeedOsmoticPressure * concentrationRatio;
               // Calculate net driving pressure
              // REVISION 1: Enhanced NDP calculation with permeate-side osmotic pressure
 const permeateOsmoticPressure = calculatePermeateOsmoticPressure(feedOsmoticPressure, selectedMembraneProp.rejectionNominal);
+// --- ADD THIS JUST BEFORE NDP CALCULATION ---
+const concentrateOsmoticPressure =
+  feedOsmoticPressure / Math.max(1e-6, (1 - elementRecovery || 1));
 
+const avgOsmoticPressure =
+  0.5 * (feedOsmoticPressure + concentrateOsmoticPressure);
+
+// Apply CP on average osmotic pressure
+const effectiveAvgOsmoticPressure =
+  avgOsmoticPressure * polarizationFactor;
 // NDP = Feed Pressure - Feed Osmotic Pressure - Permeate Pressure - Permeate Osmotic Pressure
-const ndp = Math.max(0, pvFeedPressure - effectiveOsmoticPressure - permatePressure - permeateOsmoticPressure);
+const ndp = Math.max(0, pvFeedPressure - effectiveAvgOsmoticPressure - permatePressure - permeateOsmoticPressure
+);
               element.ndp = ndp;
               
               // Calculate water flux through membrane

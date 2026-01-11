@@ -1732,7 +1732,7 @@ averageElementRecovery: calculateAverageElementRecovery(actualRecovery, totalEle
                     <td className="px-3 py-2 whitespace-nowrap text-sm">{el.vessel}</td>
                     <td className="px-3 py-2 whitespace-nowrap text-sm">{el.element}</td>
                     <td className="px-3 py-2 whitespace-nowrap text-sm">{el.feedFlow}</td>
-                    <td className="px-3 py-2 whitespace-nowrap text-sm">{el.feedPressure ? el.feedPressure.toFixed(1) : '-'}</td>
+                    <td className="px-3 py-2 whitespace-nowrap text-sm">{el.feedPressure ? (el.feedPressure - 72).toFixed(1) : '-'}</td>
                     <td className="px-3 py-2 whitespace-nowrap text-sm">{el.feedTDS}</td>
                     <td className="px-3 py-2 whitespace-nowrap text-sm">{el.recovery}</td>
                     <td className="px-3 py-2 whitespace-nowrap text-sm">{(el.flux * GPD_FT2_TO_LMH).toFixed(1) || '-'}</td>

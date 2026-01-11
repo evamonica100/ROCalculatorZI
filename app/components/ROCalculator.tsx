@@ -351,7 +351,7 @@ const calculatePermeateTDS = (feedTDS, elementRejection, flux, saltPermeability,
     const permeateTDS = effectiveFeedTDS * (1 - elementRejection);
     
     // Apply safety limits
-    return Math.max(10, Math.min(permeateTDS, feedTDS * 0.8)); // Min 10 mg/L, max 80% of feed
+    return Math.max(0.1, Math.min(permeateTDS, feedTDS * 0.8)); // Min 10 mg/L, max 80% of feed
   }
   
   // Fallback method using feed TDS

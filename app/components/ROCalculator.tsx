@@ -853,7 +853,7 @@ const effectiveAvgOsmoticPressure =
 // 3. NET DRIVING PRESSURE
 // --------------------------------------------
 const ndp = Math.max(
-  0,
+  0.2,
   pvFeedPressure -
     effectiveAvgOsmoticPressure -
     permatePressure -

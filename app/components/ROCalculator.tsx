@@ -143,7 +143,7 @@ waterAnalysis: {
       area: 400, // ft²
       waterPermeability: 0.129, // gfd/psi
       saltPermeability: 0.00006, // gfd
-      rejectionNominal: 0.997, // fraction
+      rejectionNominal: 0.98, // fraction
       maxFlux: 24, // gfd
       maxFeedFlowRate: 16, // gpm
       maxPressureDrop: 15 // psi

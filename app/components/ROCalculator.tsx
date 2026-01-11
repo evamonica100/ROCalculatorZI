@@ -1121,7 +1121,7 @@ averageElementRecovery: calculateAverageElementRecovery(actualRecovery, totalEle
             concentrateOsmoticPressure: parseFloat(bestResults.concentrateOsmoticPressure.toFixed(1)),
             pressureDrops: bestResults.pressureDrops.map((pd: number) => parseFloat(pd.toFixed(1))),
             feedOsmoticPressure: parseFloat(bestResults.feedOsmoticPressure.toFixed(1)),
-            feedPressure: parseFloat(bestFeedPressure.toFixed(1)),
+            feedPressure: parseFloat((bestFeedPressure-72).toFixed(1)),
             averageNDP: parseFloat(bestResults.averageNDP.toFixed(1)),
           },
         });

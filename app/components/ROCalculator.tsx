@@ -320,7 +320,7 @@ const ionData = {
   
   // Helper function to calculate concentration polarization factor
   const calculatePolarizationFactor = (recovery: number) => {
-    return Math.exp(0.7 * recovery);
+    return Math.exp(0.35 * recovery);
   };
 
   // Calculate pressure drop in element based on flow rate

@@ -822,12 +822,25 @@ const feedOsmoticPressure = initialFeedOsmoticPressure * concentrationRatio;
               // Use constant permeate pressure (atmospheric pressure)
               const permatePressure = 14.7; // psi (atmospheric pressure)
               
-              // Calculate net driving pressure
-             // REVISION 1: Enhanced NDP calculation with permeate-side osmotic pressure
-const permeateOsmoticPressure = calculatePermeateOsmoticPressure(feedOsmoticPressure, selectedMembraneProp.rejectionNominal);
-// --- ADD THIS JUST BEFORE NDP CALCULATION ---
+              // --------------------------------------------
+// 1. PROVISIONAL ELEMENT RECOVERY (for osmotic calc)
+// --------------------------------------------
+const maxElementRecovery = elementType.includes('SW') ? 0.12 : 0.15;
+const elementRecovery =
+  Math.min(maxElementRecovery, 0.5 * stageRecovery / elementsInStage);
+element.recovery = elementRecovery;
+
+// --------------------------------------------
+// 2. OSMOTIC PRESSURES
+// --------------------------------------------
+const permeateOsmoticPressure =
+  calculatePermeateOsmoticPressure(
+    feedOsmoticPressure,
+    selectedMembraneProp.rejectionNominal
+  );
+
 const concentrateOsmoticPressure =
-  feedOsmoticPressure / Math.max(1e-6, (1 - elementRecovery || 1));
+  feedOsmoticPressure / Math.max(1e-6, (1 - elementRecovery));
 
 const avgOsmoticPressure =
   0.5 * (feedOsmoticPressure + concentrateOsmoticPressure);
@@ -835,34 +848,59 @@ const avgOsmoticPressure =
 // Apply CP on average osmotic pressure
 const effectiveAvgOsmoticPressure =
   avgOsmoticPressure * polarizationFactor;
-// NDP = Feed Pressure - Feed Osmotic Pressure - Permeate Pressure - Permeate Osmotic Pressure
-const ndp = Math.max(0, pvFeedPressure - effectiveAvgOsmoticPressure - permatePressure - permeateOsmoticPressure
+
+// --------------------------------------------
+// 3. NET DRIVING PRESSURE
+// --------------------------------------------
+const ndp = Math.max(
+  0,
+  pvFeedPressure -
+    effectiveAvgOsmoticPressure -
+    permatePressure -
+    permeateOsmoticPressure
 );
-              element.ndp = ndp;
-              
-              // Calculate water flux through membrane
-              const flux = calculateFlux(ndp, selectedMembraneProp.waterPermeability, tcf, foulingFactor);
-              element.flux = flux;
-              
-              // Calculate permeate flow based on flux and membrane area
-              const permeateFlowGpd = flux * selectedMembraneProp.area * flowFactor;
-              const permeateFlowM3h = permeateFlowGpd * GPD_TO_M3H;
-              element.permeateFlow = permeateFlowM3h;
-              
-              // Calculate recovery for this element
-              // FIXED: Realistic element recovery limits
-const maxElementRecovery = elementType.includes('SW') ? 0.12 : 0.15; // 12% for SW, 15% for BW
-const elementRecovery = Math.min(maxElementRecovery, permeateFlowM3h / pvFeedFlow);
-              element.recovery = elementRecovery;
-              
-              // Calculate concentrate flow
-              const concentrateFlowM3h = pvFeedFlow - permeateFlowM3h;
-              element.concentrateFlow = concentrateFlowM3h;
-              
-              // Calculate concentrate TDS
-              const concentrateTDS = elementRecovery > 0 ? 
-                  pvFeedTDS / (1 - elementRecovery) : pvFeedTDS;
-              
+element.ndp = ndp;
+
+// --------------------------------------------
+// 4. FLUX & PERMEATE FLOW
+// --------------------------------------------
+const flux =
+  calculateFlux(
+    ndp,
+    selectedMembraneProp.waterPermeability,
+    tcf,
+    foulingFactor
+  );
+element.flux = flux;
+
+const permeateFlowGpd =
+  flux * selectedMembraneProp.area * flowFactor;
+const permeateFlowM3h =
+  permeateFlowGpd * GPD_TO_M3H;
+element.permeateFlow = permeateFlowM3h;
+
+// --------------------------------------------
+// 5. UPDATE ELEMENT RECOVERY (FINAL)
+// --------------------------------------------
+const finalElementRecovery =
+  Math.min(
+    maxElementRecovery,
+    permeateFlowM3h / Math.max(1e-6, pvFeedFlow)
+  );
+element.recovery = finalElementRecovery;
+
+// --------------------------------------------
+// 6. CONCENTRATE FLOW & TDS
+// --------------------------------------------
+const concentrateFlowM3h =
+  pvFeedFlow - permeateFlowM3h;
+element.concentrateFlow = concentrateFlowM3h;
+
+const concentrateTDS =
+  finalElementRecovery > 0
+    ? pvFeedTDS / (1 - finalElementRecovery)
+    : pvFeedTDS;
+
               // Calculate permeate TDS
       // REVISION 2: Use enhanced permeate TDS calculation with attachment formula
 const permeateTDS = calculatePermeateTDS(

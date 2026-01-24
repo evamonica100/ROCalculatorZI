@@ -186,57 +186,57 @@ waterAnalysis: {
     // ZEKINDO Sea Water (SW) membranes
 'ZEKINDO SW-4040': {
   area: 82,
-  waterPermeability: 0.0189,
-  saltPermeability: 0.00005,  // ← FIXED
+  waterPermeability: 0.14,
+  saltPermeability: 0.00011,
   rejectionNominal: 0.996,
-  maxFlux: 16,
-  maxFeedFlowRate: 16,
-  maxPressureDrop: 15
+  maxFlux: 13,
+  maxFeedFlowRate: 3.5,
+  maxPressureDrop: 6
 },
 'ZEKINDO SW-400 HR': {
   area: 400,
-  waterPermeability: 0.0227,
-  saltPermeability: 0.00005,  // ← FIXED
+  waterPermeability: 0.11,
+  saltPermeability: 0.00008,
   rejectionNominal: 0.997,
-  maxFlux: 16,
-  maxFeedFlowRate: 16,
-  maxPressureDrop: 15
+  maxFlux: 13,
+  maxFeedFlowRate: 15,
+  maxPressureDrop: 10
 },
 'ZEKINDO SW-440 HR': {
   area: 440,
-  waterPermeability: 0.0224,  // FIXED: Calculated from specs
-  saltPermeability: 0.0511,   // FIXED: Calculated from specs
+  waterPermeability: 0.115,
+  saltPermeability: 0.00008,
   rejectionNominal: 0.997,
-  maxFlux: 16,
+  maxFlux: 13,
   maxFeedFlowRate: 16,
-  maxPressureDrop: 15
+  maxPressureDrop: 10
 },
 'ZEKINDO SW-4040 HRLE': {
   area: 82,
-  waterPermeability: 0.0232,  // FIXED: Calculated from specs
-  saltPermeability: 0.0531,   // FIXED: Calculated from specs
+  waterPermeability: 0.15,
+  saltPermeability: 0.00009,
   rejectionNominal: 0.996,
-  maxFlux: 16,
-  maxFeedFlowRate: 16,
-  maxPressureDrop: 15
+  maxFlux: 13,
+  maxFeedFlowRate: 3.5,
+  maxPressureDrop: 6
 },
 'ZEKINDO SW-400 HRLE': {
   area: 400,
-  waterPermeability: 0.031043,  // FIXED: Calculated from specs
-  saltPermeability: 0.006209,   // FIXED: Calculated from specs
+  waterPermeability: 0.13,
+  saltPermeability: 0.00009,
   rejectionNominal: 0.997,
-  maxFlux: 16,
-  maxFeedFlowRate: 16,
-  maxPressureDrop: 15
+  maxFlux: 14,
+  maxFeedFlowRate: 15,
+  maxPressureDrop: 10
 },
 'ZEKINDO SW-440 HRLE': {
   area: 440,
-  waterPermeability: 0.0245,  // FIXED: Calculated from specs
-  saltPermeability: 0.0558,   // FIXED: Calculated from specs
+  waterPermeability: 0.14,
+  saltPermeability: 0.00009,
   rejectionNominal: 0.997,
-  maxFlux: 16,
+  maxFlux: 14,
   maxFeedFlowRate: 16,
-  maxPressureDrop: 15
+  maxPressureDrop: 10
 }
   };
 

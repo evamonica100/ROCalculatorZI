@@ -186,7 +186,7 @@ waterAnalysis: {
     // ZEKINDO Sea Water (SW) membranes
 'ZEKINDO SW-4040': {
   area: 82,
-  waterPermeability: 0.075,       // ↓ dari 0.11
+  waterPermeability: 0.064,       // ↓ dari 0.075
   saltPermeability: 0.00015,
   rejectionNominal: 0.996,
   maxFlux: 14,
@@ -196,7 +196,7 @@ waterAnalysis: {
 
 'ZEKINDO SW-400 HR': {
   area: 400,
-  waterPermeability: 0.065,       // ↓ dari 0.095
+  waterPermeability: 0.055,       // ↓ dari 0.065
   saltPermeability: 0.00013,
   rejectionNominal: 0.997,
   maxFlux: 14,
@@ -206,7 +206,7 @@ waterAnalysis: {
 
 'ZEKINDO SW-440 HR': {
   area: 440,
-  waterPermeability: 0.068,       // ↓ dari 0.10
+  waterPermeability: 0.058,       // ↓ dari 0.068
   saltPermeability: 0.00013,
   rejectionNominal: 0.997,
   maxFlux: 14,
@@ -216,7 +216,7 @@ waterAnalysis: {
 
 'ZEKINDO SW-4040 HRLE': {
   area: 82,
-  waterPermeability: 0.078,
+  waterPermeability: 0.066,
   saltPermeability: 0.00014,
   rejectionNominal: 0.996,
   maxFlux: 14,
@@ -226,7 +226,7 @@ waterAnalysis: {
 
 'ZEKINDO SW-400 HRLE': {
   area: 400,
-  waterPermeability: 0.072,
+  waterPermeability: 0.060,
   saltPermeability: 0.00013,
   rejectionNominal: 0.997,
   maxFlux: 15,
@@ -236,7 +236,7 @@ waterAnalysis: {
 
 'ZEKINDO SW-440 HRLE': {
   area: 440,
-  waterPermeability: 0.075,
+  waterPermeability: 0.063,
   saltPermeability: 0.00013,
   rejectionNominal: 0.997,
   maxFlux: 15,

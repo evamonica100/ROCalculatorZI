@@ -8,7 +8,7 @@ import OperatingData from './components/OperatingData';
 import DataManager from './components/DataManager';
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState('operating');
+  const [activeSection, setActiveSection] = useState('membrane');
   const [isClient, setIsClient] = useState(false);
   
   useEffect(() => {
@@ -48,12 +48,6 @@ export default function Home() {
         <div className="flex items-center space-x-4">
           <nav className="flex space-x-4">
             <button
-              onClick={() => setActiveSection('project')}
-              className={`px-4 py-2 rounded ${activeSection === 'project' ? 'bg-blue-100 text-blue-900' : 'text-blue-900'}`}
-            >
-              Project Details
-            </button>
-            <button
               onClick={() => setActiveSection('water')}
               className={`px-4 py-2 rounded ${activeSection === 'water' ? 'bg-blue-100 text-blue-900' : 'text-blue-900'}`}
             >
@@ -83,10 +77,10 @@ export default function Home() {
       
       <main className="flex-grow container mx-auto px-4 py-8">
         <DataManager />
-        {activeSection === 'operating' && <OperatingData />}
+        {activeSection === 'water' && <ScalingIndicesCalculator />}
         
-        {activeSection === 'project' && <ScalingIndicesCalculator />}
-        {activeSection === 'water' && <ROCalculator />}
+        {activeSection === 'membrane' && <ROCalculator />}
+        {activeSection === 'operating' && <OperatingData />}
 
       </main>
       

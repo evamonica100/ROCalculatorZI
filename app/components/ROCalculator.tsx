@@ -186,63 +186,64 @@ waterAnalysis: {
     // ZEKINDO Sea Water (SW) membranes
 'ZEKINDO SW-4040': {
   area: 82,
-  waterPermeability: 0.11,        // ↓ resistansi naik
-  saltPermeability: 0.00014,      // ↑ osmotic effect
+  waterPermeability: 0.075,       // ↓ dari 0.11
+  saltPermeability: 0.00015,
   rejectionNominal: 0.996,
   maxFlux: 14,
   maxFeedFlowRate: 3.5,
-  maxPressureDrop: 8
+  maxPressureDrop: 9
 },
 
 'ZEKINDO SW-400 HR': {
   area: 400,
-  waterPermeability: 0.095,       // HR lebih ketat
-  saltPermeability: 0.00012,
+  waterPermeability: 0.065,       // ↓ dari 0.095
+  saltPermeability: 0.00013,
   rejectionNominal: 0.997,
   maxFlux: 14,
   maxFeedFlowRate: 15,
-  maxPressureDrop: 12
+  maxPressureDrop: 13
 },
 
 'ZEKINDO SW-440 HR': {
   area: 440,
-  waterPermeability: 0.10,
-  saltPermeability: 0.00012,
+  waterPermeability: 0.068,       // ↓ dari 0.10
+  saltPermeability: 0.00013,
   rejectionNominal: 0.997,
   maxFlux: 14,
   maxFeedFlowRate: 16,
-  maxPressureDrop: 12
+  maxPressureDrop: 13
 },
 
 'ZEKINDO SW-4040 HRLE': {
   area: 82,
-  waterPermeability: 0.115,
-  saltPermeability: 0.00013,
+  waterPermeability: 0.078,
+  saltPermeability: 0.00014,
   rejectionNominal: 0.996,
   maxFlux: 14,
   maxFeedFlowRate: 3.5,
-  maxPressureDrop: 8
+  maxPressureDrop: 9
 },
 
 'ZEKINDO SW-400 HRLE': {
   area: 400,
-  waterPermeability: 0.105,
-  saltPermeability: 0.00012,
+  waterPermeability: 0.072,
+  saltPermeability: 0.00013,
   rejectionNominal: 0.997,
   maxFlux: 15,
   maxFeedFlowRate: 15,
-  maxPressureDrop: 12
+  maxPressureDrop: 13
 },
 
 'ZEKINDO SW-440 HRLE': {
   area: 440,
-  waterPermeability: 0.11,
-  saltPermeability: 0.00012,
+  waterPermeability: 0.075,
+  saltPermeability: 0.00013,
   rejectionNominal: 0.997,
   maxFlux: 15,
   maxFeedFlowRate: 16,
-  maxPressureDrop: 12
+  maxPressureDrop: 13
 }
+
   };
 
   const resultLabels = {
